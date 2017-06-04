@@ -1,0 +1,82 @@
+-- MySQL Administrator dump 1.4
+--
+-- ------------------------------------------------------
+-- Server version	5.5.25a
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+
+--
+-- Create schema itjdm06
+--
+
+CREATE DATABASE IF NOT EXISTS itjdm06;
+USE itjdm06;
+
+--
+-- Definition of table `register`
+--
+
+DROP TABLE IF EXISTS `register`;
+CREATE TABLE `register` (
+  `username` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `confirmpassword` varchar(45) NOT NULL,
+  `gender` varchar(45) NOT NULL,
+  `mobile` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `register`
+--
+
+/*!40000 ALTER TABLE `register` DISABLE KEYS */;
+INSERT INTO `register` (`username`,`email`,`password`,`confirmpassword`,`gender`,`mobile`,`address`) VALUES 
+ ('arun','arun@gmail.com','12','12','male','9943098649','chennai');
+/*!40000 ALTER TABLE `register` ENABLE KEYS */;
+
+
+--
+-- Definition of table `upload`
+--
+
+DROP TABLE IF EXISTS `upload`;
+CREATE TABLE `upload` (
+  `username` varchar(45) NOT NULL,
+  `filename` varchar(45) NOT NULL,
+  `filetype` varchar(4500) NOT NULL,
+  `filesize` varchar(45) NOT NULL,
+  `filecontent` longtext NOT NULL,
+  PRIMARY KEY (`filesize`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `upload`
+--
+
+/*!40000 ALTER TABLE `upload` DISABLE KEYS */;
+INSERT INTO `upload` (`username`,`filename`,`filetype`,`filesize`,`filecontent`) VALUES 
+ ('arun','download serve.java','application/octet-stream','1833',''),
+ ('arun','New Text Document (2).txt','text/plain','849','\r\n1.project title is:\"SECURE DATA SHARING IN CLOUD COMPUTING USING\r\n                    REVOCABLE-STORAGE IDENTITY-BASED ENCRYPTION\"..\r\n\r\n2. open the eclipse...\r\n\r\n3. run the project...\r\n\r\n4. user login first.... otherwise if user is new means register...\r\n\r\n5. new user must register...\r\n\r\n6. login by user...\r\n\r\n7. if new user means get trail key...\r\n\r\n8.  submit trail key enter to file upload...\r\n\r\n9.  for eg: user upload a file for 5 or 6 times... \r\n\r\n10.  all the files are stored in encryption format...\r\n\r\n11. if upload more than 5 times user key is got expired...\r\n\r\n12. user get keyrenew..\r\n\r\n13. then new key is generated...\r\n\r\n14. then user can upload with new key...\r\n\r\n15. after user can upload a files...\r\n\r\n16. all files are stored in encryption  format...\r\n\r\n17.logout by user...\r\n\r\n18. /***************** THANK YOU***************/');
+/*!40000 ALTER TABLE `upload` ENABLE KEYS */;
+
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

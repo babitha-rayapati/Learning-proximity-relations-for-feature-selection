@@ -1,0 +1,12 @@
+
+
+
+
+/***compress filesize***/
+
+SELECT sum(compressfilesize) FROM `itjdm15`.`upload` where username='arun';
+
+
+/****data allocated****/
+SELECT data_allocated FROM `itjdm15`.`user` where username='arun';
+

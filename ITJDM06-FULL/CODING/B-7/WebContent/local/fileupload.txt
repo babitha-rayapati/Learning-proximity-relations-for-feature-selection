@@ -1,0 +1,255 @@
+package com.servlet;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
+
+import com.Beanclass.uploadBean;
+import com.Implement.Impledb;
+import com.Interface.Interfacee;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
+import com.lowagie.text.Chunk;
+import com.lowagie.text.Document;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfWriter;
+import com.oreilly.servlet.multipart.FilePart;
+import com.oreilly.servlet.multipart.MultipartParser;
+import com.oreilly.servlet.multipart.ParamPart;
+import com.oreilly.servlet.multipart.Part;
+
+/**
+ * Servlet implementation class FileUpload
+ */
+@WebServlet("/FileUpload")
+public class FileUpload extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public FileUpload() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		Part part = null;
+		FilePart filePart = null;
+		ParamPart paramPart = null;
+		String type = null;
+		double fileSize=0.0;
+		String filename =null;
+		String tagValue =null;
+		//String items=null;
+		String filecontent="";
+		String text7="";
+													
+        PrintWriter out=response.getWriter();
+        
+		MultipartParser mpp=new MultipartParser(request, 999999999);
+		
+		uploadBean bean=new uploadBean();
+		
+		
+		ArrayList<String> paramValues = new ArrayList<String>();
+		
+		String realpath=getServletContext().getRealPath("/");
+		//System.out.println(realpath+"===I am Real Path");
+		String path=realpath.substring(0,realpath.indexOf("."))+"privacyAudit\\WebContent\\uploaddata\\Originaldata\\";
+		String path1=realpath.substring(0,realpath.indexOf("."))+"privacyAudit\\WebContent\\uploaddata\\encryteddata\\";
+		
+		while((part=mpp.readNextPart())!=null)
+		{
+			if(part.isFile())
+			{
+				filePart = (FilePart) part;
+				
+				path=path+filePart.getFileName();
+				
+				filename=filePart.getFileName();
+				
+				File uploadedFile = new File(path);
+				
+				type = filePart.getContentType();
+				
+				fileSize = filePart.writeTo(uploadedFile);
+				//System.out.println(fileSize);
+				
+				FileInputStream fis=new FileInputStream(uploadedFile);// FileInputStrean get bytes from file
+				//System.out.println(fis);
+				//bean.setUploadContent(fis);
+////////////////////////////////////////////////////////
+				
+				File encrypt=new File(path);
+				FileInputStream fis1=new FileInputStream(encrypt);
+///////////////////////////////////////////////////////
+				
+				if(filename.endsWith(".txt"))
+					
+					{
+					byte[] b=new byte[fis1.available()];
+					fis1.read(b);
+					String reading=new String(b);
+					filecontent=filecontent+reading;
+					
+					bean.setNewContent(filecontent);
+				    
+					String encrpt;
+					try 
+{
+					encrpt = encryptdata.encrypt(filecontent);
+					
+					FileOutputStream fileOutputStream=new FileOutputStream(new File(path1+filename));
+				
+					fileOutputStream.write(encrpt.getBytes());
+					System.out.println(encrpt);
+					} 
+					catch (Exception e) {
+
+						e.printStackTrace();
+					}
+				}
+//////////////////////////////////////////////////////
+				else if (filename.endsWith(".doc")) 
+				{  
+					WordExtractor extractor = null;
+					
+					FileInputStream fis2=new FileInputStream(path);
+					System.out.println("file is"+fis);
+					HWPFDocument document=new HWPFDocument(fis2);
+					extractor = new WordExtractor(document);
+					String [] fileData = extractor.getParagraphText();
+					String mydate=extractor.getTextFromPieces();
+					System.out.println("DATASSSSSSSSSSSSSSSSSss "+fileData);
+					
+					bean.setNewContent(mydate);
+					System.out.println("THE MYYYYYYYYYYY "+mydate);
+					String text1=null;
+					System.out.println("filedata len  "+fileData.length);
+					String encrpt;
+					try {
+
+					encrpt = encryptdata.encrypt(mydate);
+					
+					System.out.println("encrypted data is"+encrpt);
+					FileOutputStream fileOutputStream=new FileOutputStream(new File(path1+filename));
+					fileOutputStream.write(encrpt.getBytes());
+					} 
+					catch (Exception e) 
+					{
+						
+						e.printStackTrace();
+					}
+				}
+///////////////////////////////////////////////////////
+				
+				else if(filename.endsWith(".pdf"))
+				{ 
+					//System.out.println("padf file name"+file1.getName());
+				
+					String text="";
+					com.itextpdf.text.pdf.PdfReader pdfReader=new PdfReader(path);
+				
+					int pages=pdfReader.getNumberOfPages();
+					for(int i1=1;i1<=pages;i1++)
+					{
+						 text=PdfTextExtractor.getTextFromPage(pdfReader, i1);
+						 //System.out.println("page:"+i1+" "+text);
+						 text7=text7+text;
+					}
+					
+					System.out.println("Pdf Full Content in text7 ="+text7);
+					
+					bean.setNewContent(text7);
+
+
+///////////////////////////////////////////////////////////////////
+
+
+				String encrpt;
+				try {
+					encrpt = encryptdata.encrypt(text);
+				Document document=new Document(PageSize.A4);
+				/*  File file=new File("C:\\Users\\spiro13\\Desktop\\naga\\"+pdffilename);
+				  System.out.println(file.delete());*/
+				PdfWriter.getInstance(document, new FileOutputStream(new File(path1+filename)));
+				//FileOutputStream fileOutputStream=new FileOutputStream("C:\\Users\\spiro13\\Desktop\\naga\\pdffilename1.pdf");
+				Chunk chunk=new Chunk(encrpt);
+				document.open();
+				Font font=new Font(Font.TIMES_ROMAN);
+				font.setStyle(font.BOLD);
+				Paragraph p1=new Paragraph(chunk);
+				p1.setAlignment(Element.ALIGN_LEFT);
+				document.add(p1);
+				document.close();
+				System.out.println("pdf writing is completed");
+				//fileOutputStream.write(encrpt.getBytes());
+				System.out.println(encrpt);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				  
+				}
+				
+			}else if(part.isParam())
+			{
+				paramPart = (ParamPart) part;
+				String tagName = paramPart.getName();
+				System.out.println("tagName = " + tagName);
+				 tagValue = paramPart.getStringValue();
+				System.out.println("tagValue = " + tagValue);
+				paramValues.add(tagValue);
+				
+			}
+			
+		}
+		      bean.setPublickey("500");
+		      bean.setFilename(filename);
+		      bean.setFiletype(type);
+		      bean.setFilesize(fileSize+"");
+		      bean.setPath(path);
+		      bean.setParamValues(paramValues);
+		Interfacee mi=new Impledb();
+	    int status=	mi.fileUpload(bean);
+	if(status==1)
+	{
+	
+		response.sendRedirect("HomepageSucess.jsp");
+	}
+	else
+	{
+		response.sendRedirect("HomepageError.jsp");
+	}
+		
+	}
+
+}
